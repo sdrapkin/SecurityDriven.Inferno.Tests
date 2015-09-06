@@ -1,15 +1,16 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Text;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace SecurityDriven.Inferno.Tests
 {
+	using Extensions;
+	using Hash;
 	using Kdf;
 	using Mac;
-	using Hash;
-	using Extensions;
 
 	//http://tools.ietf.org/html/rfc4231
 	[TestClass]
@@ -361,6 +362,63 @@ namespace SecurityDriven.Inferno.Tests
 			Extensions.Base16Extensions.FromBase16(null);
 		}
 	}//class
+
+	[TestClass]
+	public class Base16_Modhex_Tests
+	{
+		Func<byte[], string> toModhex = binary => Base16Extensions.ToBase16(binary, Base16Config.HexYubiModhex);
+		Func<string, byte[]> fromModhex = str16 => Base16Extensions.FromBase16(str16, Base16Config.HexYubiModhex);
+
+		void TestRun(string modhex, string hex)
+		{
+			byte[] modhexBytes = fromModhex(modhex);
+			byte[] hexBytes = hex.FromBase16();
+			string msg = $"modhex:\"{modhex}\", hex:\"{hex}\"";
+
+			Assert.IsTrue(Enumerable.SequenceEqual(modhexBytes, hexBytes), msg);
+			Assert.IsTrue(toModhex(modhexBytes) == modhex, msg);
+		}
+
+		// test cases from YubiKey Manual v3.4 and Yubico forums
+		Dictionary<string, string> testcases = new Dictionary<string, string>
+		{
+			["fi"] = "47",
+			["nlltvcct"] = "baadf00d",
+			["hknhfjbrjnlnldnhcujvddbikngjrtgh"] = "69b6481c8baba2b60e8f22179b58cd56",
+			["chjdkgdteehevddghgfngjlienbebdgk"] = "0682952d3363f225654b58a73b131259",
+			["dteffuje"] = "2d344e83",
+			["ekhgjhbctrgn"] = "39658610dc5b",
+		};
+
+		[TestMethod]
+		public void Base16_Modhex_Test()
+		{
+			foreach (var test in testcases) TestRun(modhex: test.Key, hex: test.Value);
+		}// Base16_Modhex_Test()
+	}//class Base16_Modhex_Tests
+
+	[TestClass]
+	public class Base64_ToB64Url_Tests
+	{
+		[TestMethod]
+		public void Base64_ToB64Url_Test()
+		{
+			var rnd = new CryptoRandom();
+			for (int i = 1; i < 5000; ++i)
+			{
+				var byteArray = rnd.NextBytes(i);
+				var offset = 0;
+				var count = Math.Max(i, i - rnd.Next(10));
+				var byteSegment = new ArraySegment<byte>(byteArray, offset, count);
+
+				var b64url = byteSegment.ToB64Url();
+				var b64 = byteSegment.ToB64();
+
+				Assert.IsTrue(b64url + b64[b64.Length - 1] == b64);
+				Assert.IsTrue(Enumerable.SequenceEqual(byteSegment, b64url.FromB64Url()));
+			}
+		}// Base64_ToB64Url_Test()
+	}// class Base64_ToB64Url_Tests()
 
 	//http://tools.ietf.org/html/rfc5869 (Appendix A test vectors)
 	[TestClass]
