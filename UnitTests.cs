@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SecurityDriven.Inferno.Tests
 {
@@ -190,6 +191,29 @@ namespace SecurityDriven.Inferno.Tests
 					iterations: 4096).GetBytes(40);
 
 			var expected = "34 8c 89 db cb d3 2b 2f 32 d8 14 b8 11 6e 84 cf 2b 17 34 7e bc 18 00 18 1c 4e 2a 1f b8 dd 53 e1 c6 35 51 8c 7d ac 47 e9".Replace(" ", "").FromBase16();
+			Assert.IsTrue(Enumerable.SequenceEqual(expected, result));
+		}
+
+		//https://github.com/Anti-weakpasswords/PBKDF2-Test-Vectors/releases/tag/1.0
+		[TestMethod]
+		public void PBKDF2_SHA384()
+		{
+			byte[] result, expected;
+
+			result = new PBKDF2(HMACFactories.HMACSHA384,
+					password: Encoding.ASCII.GetBytes("passDATAb00AB7YxDTTlRH2dqxDx19GDxDV1zFMz7E6QVqK"),
+					salt: Encoding.ASCII.GetBytes("saltKEYbcTcXHCBxtjD2PnBh44AIQ6XUOCESOhXpEp3HrcG"),
+					iterations: 1).GetBytes(48);
+
+			expected = "0644A3489B088AD85A0E42BE3E7F82500EC18936699151A2C90497151BAC7BB69300386A5E798795BE3CEF0A3C803227".FromBase16();
+			Assert.IsTrue(Enumerable.SequenceEqual(expected, result));
+
+			result = new PBKDF2(HMACFactories.HMACSHA384,
+					password: Encoding.ASCII.GetBytes("passDATAb00AB7YxDTTlRH2dqxDx19GDxDV1zFMz7E6QVqKIzwOtMnlxQLttpE57Un4u12D2YD7oOPpiEvCDYvntXEe4NNPLCnGGeJArbYDEu6xDoCfWH6kbuV6awi04Uz3ebEAhzZ4ve1A2wg5CnLXdZC5Y7gwfVgbEgZSTmoYQSzC5OW4dfrjqiwApTACO6xoOL1AjWj6X6f6qFfF8TVmOzU9RhOd1N4QtzWI4fP6FYttNz5FuLdtYVXWVXH2Tf7I9fieMeWCHTMkM4VcmQyQHpbcP8MEb5f1g6Ckg5xk3HQr3wMBvQcOHpCPy1K8HCM7a5wkPDhgVA0BVmwNpsRIbDQZRtHK6dT6bGyalp6gbFZBuBHwD86gTzkrFY7HkOVrgc0gJcGJZe65Ce8v4Jn5OzkuVsiU8efm2Pw2RnbpWSAr7SkVdCwXK2XSJDQ5fZ4HBEz9VTFYrG23ELuLjvx5njOLNgDAJuf5JB2tn4nMjjcnl1e8qcYVwZqFzEv2zhLyDWMkV4tzl4asLnvyAxTBkxPRZj2pRABWwb3kEofpsHYxMTAn38YSpZreoXipZWBnu6HDURaruXaIPYFPYHl9Ls9wsuD7rzaGfbOyfVgLIGK5rODphwRA7lm88bGKY8b7tWOtepyEvaLxMI7GZF5ScwpZTYeEDNUKPzvM2Im9zehIaznpguNdNXNMLWnwPu4H6zEvajkw3G3ucSiXKmh6XNe3hkdSANm3vnxzRXm4fcuzAx68IElXE2bkGFElluDLo6EsUDWZ4JIWBVaDwYdJx8uCXbQdoifzCs5kuuClaDaDqIhb5hJ2WR8mxiueFsS0aDGdIYmye5svmNmzQxFmdOkHoF7CfwuU1yy4uEEt9vPSP2wFp1dyaMvJW68vtB4kddLmI6gIgVVcT6ZX1Qm6WsusPrdisPLB2ScodXojCbL3DLj6PKG8QDVMWTrL1TpafT2wslRledWIhsTlv2mI3C066WMcTSwKLXdEDhVvFJ6ShiLKSN7gnRrlE0BnAw"),
+					salt: Encoding.ASCII.GetBytes("saltKEYbcTcXHCBxtjD2PnBh44AIQ6XUOCESOhXpEp3HrcGMwbjzQKMSaf63IJemkURWoqHusIeVB8Il91NjiCGQacPUu9qTFaShLbKG0Yj4RCMV56WPj7E14EMpbxy6PlBdILBOkKUB6TGTPJXh1tpdOHTG6KuIvcbQp9qWjaf1uxAKgiTtYRIHhxjJI2viVa6fDZ67QOouOaf2RXQhpsWaTtAVnff6PIFcvJhdPDFGV5nvmZWoCZQodj6yXRDHPw9PyF0iLYm9uFtEunlAAxGB5qqea4X5tZvB1OfLVwymY3a3JPjdxTdvHxCHbqqE0zip61JNqdmeWxGtlRBC6CGoCiHO4XxHCntQBRJDcG0zW7joTdgtTBarsQQhlLXBGMNBSNmmTbDf3hFtawUBCJH18IAiRMwyeQJbJ2bERsY3MVRPuYCf4Au7gN72iGh1lRktSQtEFye7pO46kMXRrEjHQWXInMzzy7X2StXUzHVTFF2VdOoKn0WUqFNvB6PF7qIsOlYKj57bi1Psa34s85WxMSbTkhrd7VHdHZkTVaWdraohXYOePdeEvIwObCGEXkETUzqM5P2yzoBOJSdjpIYaa8zzdLD3yrb1TwCZuJVxsrq0XXY6vErU4QntsW0972XmGNyumFNJiPm4ONKh1RLvS1kddY3nm8276S4TUuZfrRQO8QxZRNuSaZI8JRZp5VojB5DktuMxAQkqoPjQ5Vtb6oXeOyY591CB1MEW1fLTCs0NrL321SaNRMqza1ETogAxpEiYwZ6pIgnMmSqNMRdZnCqA4gMWw1lIVATWK83OCeicNRUNOdfzS7A8vbLcmvKPtpOFvhNzwrrUdkvuKvaYJviQgeR7snGetO9JLCwIlHIj52gMCNU18d32SJl7Xomtl3wIe02SMvq1i1BcaX7lXioqWGmgVqBWU3fsUuGwHi6RUKCCQdEOBfNo2WdpFaCflcgnn0O6jVHCqkv8cQk81AqS00rAmHGCNTwyA6Tq5TXoLlDnC8gAQjDUsZp0z"),
+					iterations: 100000).GetBytes(49);
+
+			expected = "7BADBDA9DBE9D5AB9237268D57ABB235B6B729AEFA9CACDF5E3007136F1178231FCFFE3E6437D9EF713EC32887C4B42674".FromBase16();
 			Assert.IsTrue(Enumerable.SequenceEqual(expected, result));
 		}
 
@@ -404,7 +428,7 @@ namespace SecurityDriven.Inferno.Tests
 		public void Base64_ToB64Url_Test()
 		{
 			var rnd = new CryptoRandom();
-			for (int i = 1; i < 5000; ++i)
+			Parallel.For(1, 5000, i =>
 			{
 				var byteArray = rnd.NextBytes(i);
 				var offset = 0;
@@ -416,7 +440,7 @@ namespace SecurityDriven.Inferno.Tests
 
 				Assert.IsTrue(b64url + b64[b64.Length - 1] == b64);
 				Assert.IsTrue(Enumerable.SequenceEqual(byteSegment, b64url.FromB64Url()));
-			}
+			});
 		}// Base64_ToB64Url_Test()
 	}// class Base64_ToB64Url_Tests()
 
