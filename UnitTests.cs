@@ -602,41 +602,50 @@ namespace SecurityDriven.Inferno.Tests
 			*/
 			hmac = HMACFactories.HMACSHA1();
 
-			// COUNT=0
-			hmac.Key = "f7591733c856593565130975351954d0155abf3c".FromBase16();
-			buffer = new ArraySegment<byte>("000000018e347ef55d5f5e99eab6de706b51de7ce004f3882889e259ff4e5cff102167a5a4bd711578d4ce17dd9abe56e51c1f2df950e2fc812ec1b217ca08d6".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[128 / 8]);
-			expected = "34fe44b0d8c41b93f5fa64fb96f00e5b";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
-
-			// COUNT=10
-			hmac.Key = "c1efb8d25affc61ed060d994fcd5017c2adfc388".FromBase16();
-			buffer = new ArraySegment<byte>("00000001b92fc055057fec71b9c53e7c44872423a57ed186d6ba66d980fecd1253bf71479320b7bf38d505ef79ca4d62d78ca662642cdcedb99503ea04c1dbe8".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[256 / 8]);
-			expected = "8db784cf90b573b06f9b7c7dca63a1ea16d93ee7d70ff9d87fa2558e83dc4eaa";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
-
-			// COUNT=20
-			hmac.Key = "e02ba5d5c410e855bbd13f840124273e6b864237".FromBase16();
-			buffer = new ArraySegment<byte>("00000001b14e227b4438f973d671141c6246acdc794eee91bc7efd1d5ff02a7b8fb044009fb6f1f0f64f35365fb1098e1995a34f8b70a71ed0265ed17ae7ae40".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[160 / 8]);
-			expected = "f077c2d5d36a658031c74ef5a66aa48b4456530a";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
-
-			// COUNT=30
-			hmac.Key = "693adb9037184627ad300f176985bd379f388a95".FromBase16();
-			buffer = new ArraySegment<byte>("000000017f09570c2d9304ec743ab845a8761c126c18f5cf72358eada2b5d1deb43dc6a0f4ff8f933bef7af0bcfacb33fa07f8ca04a06afe231835d5075996be".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[320 / 8]);
-			expected = "52f55f51010e9bd78e4f58cab274ecafa561bd4e0f20da84f0303a1e5ff9bebc514361ec6df5c77e";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=0
+				hmac.Key = "f7591733c856593565130975351954d0155abf3c".FromBase16();
+				buffer = new ArraySegment<byte>("000000018e347ef55d5f5e99eab6de706b51de7ce004f3882889e259ff4e5cff102167a5a4bd711578d4ce17dd9abe56e51c1f2df950e2fc812ec1b217ca08d6".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[128 / 8]);
+				expected = "34fe44b0d8c41b93f5fa64fb96f00e5b";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=10
+				hmac.Key = "c1efb8d25affc61ed060d994fcd5017c2adfc388".FromBase16();
+				buffer = new ArraySegment<byte>("00000001b92fc055057fec71b9c53e7c44872423a57ed186d6ba66d980fecd1253bf71479320b7bf38d505ef79ca4d62d78ca662642cdcedb99503ea04c1dbe8".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[256 / 8]);
+				expected = "8db784cf90b573b06f9b7c7dca63a1ea16d93ee7d70ff9d87fa2558e83dc4eaa";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=20
+				hmac.Key = "e02ba5d5c410e855bbd13f840124273e6b864237".FromBase16();
+				buffer = new ArraySegment<byte>("00000001b14e227b4438f973d671141c6246acdc794eee91bc7efd1d5ff02a7b8fb044009fb6f1f0f64f35365fb1098e1995a34f8b70a71ed0265ed17ae7ae40".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[160 / 8]);
+				expected = "f077c2d5d36a658031c74ef5a66aa48b4456530a";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=30
+				hmac.Key = "693adb9037184627ad300f176985bd379f388a95".FromBase16();
+				buffer = new ArraySegment<byte>("000000017f09570c2d9304ec743ab845a8761c126c18f5cf72358eada2b5d1deb43dc6a0f4ff8f933bef7af0bcfacb33fa07f8ca04a06afe231835d5075996be".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[320 / 8]);
+				expected = "52f55f51010e9bd78e4f58cab274ecafa561bd4e0f20da84f0303a1e5ff9bebc514361ec6df5c77e";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
 		}// SP800_108_SHA1
 
 		[TestMethod]
@@ -648,42 +657,50 @@ namespace SecurityDriven.Inferno.Tests
 				[RLEN=32_BITS]
 			*/
 			hmac = HMACFactories.HMACSHA256();
-
-			// COUNT=0
-			hmac.Key = "dd1d91b7d90b2bd3138533ce92b272fbf8a369316aefe242e659cc0ae238afe0".FromBase16();
-			buffer = new ArraySegment<byte>("0000000101322b96b30acd197979444e468e1c5c6859bf1b1cf951b7e725303e237e46b864a145fab25e517b08f8683d0315bb2911d80a0e8aba17f3b413faac".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[128 / 8]);
-			expected = "10621342bfb0fd40046c0e29f2cfdbf0";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
-
-			// COUNT=10
-			hmac.Key = "e204d6d466aad507ffaf6d6dab0a5b26152c9e21e764370464e360c8fbc765c6".FromBase16();
-			buffer = new ArraySegment<byte>("000000017b03b98d9f94b899e591f3ef264b71b193fba7043c7e953cde23bc5384bc1a6293580115fae3495fd845dadbd02bd6455cf48d0f62b33e62364a3a80".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[256 / 8]);
-			expected = "770dfab6a6a4a4bee0257ff335213f78d8287b4fd537d5c1fffa956910e7c779";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
-
-			// COUNT=20
-			hmac.Key = "dc60338d884eecb72975c603c27b360605011756c697c4fc388f5176ef81efb1".FromBase16();
-			buffer = new ArraySegment<byte>("0000000144d7aa08feba26093c14979c122c2437c3117b63b78841cd10a4bc5ed55c56586ad8986d55307dca1d198edcffbc516a8fbe6152aa428cdd800c062d".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[160 / 8]);
-			expected = "29ac07dccf1f28d506cd623e6e3fc2fa255bd60b";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
-
-			// COUNT=30
-			hmac.Key = "c4bedbddb66493e7c7259a3bbbc25f8c7e0ca7fe284d92d431d9cd99a0d214ac".FromBase16();
-			buffer = new ArraySegment<byte>("000000011c69c54766791e315c2cc5c47ecd3ffab87d0d273dd920e70955814c220eacace6a5946542da3dfe24ff626b4897898cafb7db83bdff3c14fa46fd4b".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[320 / 8]);
-			expected = "1da47638d6c9c4d04d74d4640bbd42ab814d9e8cc22f4326695239f96b0693f12d0dd1152cf44430";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=0
+				hmac.Key = "dd1d91b7d90b2bd3138533ce92b272fbf8a369316aefe242e659cc0ae238afe0".FromBase16();
+				buffer = new ArraySegment<byte>("0000000101322b96b30acd197979444e468e1c5c6859bf1b1cf951b7e725303e237e46b864a145fab25e517b08f8683d0315bb2911d80a0e8aba17f3b413faac".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[128 / 8]);
+				expected = "10621342bfb0fd40046c0e29f2cfdbf0";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=10
+				hmac.Key = "e204d6d466aad507ffaf6d6dab0a5b26152c9e21e764370464e360c8fbc765c6".FromBase16();
+				buffer = new ArraySegment<byte>("000000017b03b98d9f94b899e591f3ef264b71b193fba7043c7e953cde23bc5384bc1a6293580115fae3495fd845dadbd02bd6455cf48d0f62b33e62364a3a80".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[256 / 8]);
+				expected = "770dfab6a6a4a4bee0257ff335213f78d8287b4fd537d5c1fffa956910e7c779";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=20
+				hmac.Key = "dc60338d884eecb72975c603c27b360605011756c697c4fc388f5176ef81efb1".FromBase16();
+				buffer = new ArraySegment<byte>("0000000144d7aa08feba26093c14979c122c2437c3117b63b78841cd10a4bc5ed55c56586ad8986d55307dca1d198edcffbc516a8fbe6152aa428cdd800c062d".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[160 / 8]);
+				expected = "29ac07dccf1f28d506cd623e6e3fc2fa255bd60b";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=30
+				hmac.Key = "c4bedbddb66493e7c7259a3bbbc25f8c7e0ca7fe284d92d431d9cd99a0d214ac".FromBase16();
+				buffer = new ArraySegment<byte>("000000011c69c54766791e315c2cc5c47ecd3ffab87d0d273dd920e70955814c220eacace6a5946542da3dfe24ff626b4897898cafb7db83bdff3c14fa46fd4b".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[320 / 8]);
+				expected = "1da47638d6c9c4d04d74d4640bbd42ab814d9e8cc22f4326695239f96b0693f12d0dd1152cf44430";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
 		}// SP800_108_SHA256
 
 		[TestMethod]
@@ -696,41 +713,50 @@ namespace SecurityDriven.Inferno.Tests
 			*/
 			hmac = HMACFactories.HMACSHA384();
 
-			// COUNT=0
-			hmac.Key = "216ed044769c4c3908188ece61601af8819c30f501d12995df608e06f5e0e607ab54f542ee2da41906dfdb4971f20f9d".FromBase16();
-			buffer = new ArraySegment<byte>("00000001638e9506a2c7be69ea346b84629a010c0e225b7548f508162c89f29c1ddbfd70472c2b58e7dc8aa6a5b06602f1c8ed4948cda79c62708218e26ac0e2".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[128 / 8]);
-			expected = "d4b144bb40c7cabed13963d7d4318e72";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
-
-			// COUNT=10
-			hmac.Key = "8fca201473433f2dc8f6ae51e48de1a5654ce687e711d2d65f0dc5da6fee9a6a3db9d8535d3e4455ab53d35850c88272".FromBase16();
-			buffer = new ArraySegment<byte>("00000001195bd88aa2d4211912334fe2fd9bd24522f7d9fb08e04747609bc34f2538089a9d28bbc70b2e1336c3643753cec6e5cd3f246caa915e3c3a6b94d3b6".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[256 / 8]);
-			expected = "f51ac86b0f462388d189ed0197ef99c2ff3a65816d8442e5ea304397b98dd11f";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
-
-			// COUNT=20
-			hmac.Key = "bc3157b8932e88d1b1cf8e4622137010a242d3527b1d23d6d9c0db9cc9edfc20e5135de823977bf4defafae44d6cdab6".FromBase16();
-			buffer = new ArraySegment<byte>("00000001b42a8e43cc2d4e5c69ee5e4f6b19ff6b8071d26bab4dfe45650b92b1f47652d25162d4b61441d8448c54918ae568ae2fb53091c624dbfffacee51d88".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[160 / 8]);
-			expected = "91314bdf542162031643247d6507838eaba50f1a";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
-
-			// COUNT=30
-			hmac.Key = "582f968a54b8797b9ea8c655b42e397adb73d773b1984b1e1c429cd597b8015d2f91d59e4136a9d523bf6491a4733c7a".FromBase16();
-			buffer = new ArraySegment<byte>("00000001e6d3c193eff34e34f8b7b00e66565aeb01f63206bb27e27aa281592afc06ae1ec5b7eb97a39684ce773d7c3528f2667c1f5d428406e78ce4cf39f652".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[320 / 8]);
-			expected = "691726c111e5030b5f9657069107861ecc18bc5835a814c3d2e5092c901cb1fb6c1a7cd3eb0be2a7";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=0
+				hmac.Key = "216ed044769c4c3908188ece61601af8819c30f501d12995df608e06f5e0e607ab54f542ee2da41906dfdb4971f20f9d".FromBase16();
+				buffer = new ArraySegment<byte>("00000001638e9506a2c7be69ea346b84629a010c0e225b7548f508162c89f29c1ddbfd70472c2b58e7dc8aa6a5b06602f1c8ed4948cda79c62708218e26ac0e2".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[128 / 8]);
+				expected = "d4b144bb40c7cabed13963d7d4318e72";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=10
+				hmac.Key = "8fca201473433f2dc8f6ae51e48de1a5654ce687e711d2d65f0dc5da6fee9a6a3db9d8535d3e4455ab53d35850c88272".FromBase16();
+				buffer = new ArraySegment<byte>("00000001195bd88aa2d4211912334fe2fd9bd24522f7d9fb08e04747609bc34f2538089a9d28bbc70b2e1336c3643753cec6e5cd3f246caa915e3c3a6b94d3b6".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[256 / 8]);
+				expected = "f51ac86b0f462388d189ed0197ef99c2ff3a65816d8442e5ea304397b98dd11f";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=20
+				hmac.Key = "bc3157b8932e88d1b1cf8e4622137010a242d3527b1d23d6d9c0db9cc9edfc20e5135de823977bf4defafae44d6cdab6".FromBase16();
+				buffer = new ArraySegment<byte>("00000001b42a8e43cc2d4e5c69ee5e4f6b19ff6b8071d26bab4dfe45650b92b1f47652d25162d4b61441d8448c54918ae568ae2fb53091c624dbfffacee51d88".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[160 / 8]);
+				expected = "91314bdf542162031643247d6507838eaba50f1a";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=30
+				hmac.Key = "582f968a54b8797b9ea8c655b42e397adb73d773b1984b1e1c429cd597b8015d2f91d59e4136a9d523bf6491a4733c7a".FromBase16();
+				buffer = new ArraySegment<byte>("00000001e6d3c193eff34e34f8b7b00e66565aeb01f63206bb27e27aa281592afc06ae1ec5b7eb97a39684ce773d7c3528f2667c1f5d428406e78ce4cf39f652".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[320 / 8]);
+				expected = "691726c111e5030b5f9657069107861ecc18bc5835a814c3d2e5092c901cb1fb6c1a7cd3eb0be2a7";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
 		}// SP800_108_SHA384
 
 		[TestMethod]
@@ -743,41 +769,50 @@ namespace SecurityDriven.Inferno.Tests
 			*/
 			hmac = HMACFactories.HMACSHA512();
 
-			// COUNT=0
-			hmac.Key = "dd5dbd45593ee2ac139748e7645b450f223d2ff297b73fd71cbcebe71d41653c950b88500de5322d99ef18dfdd30428294c4b3094f4c954334e593bd982ec614".FromBase16();
-			buffer = new ArraySegment<byte>("00000001b50b0c963c6b3034b8cf19cd3f5c4ebe4f4985af0c03e575db62e6fdf1ecfe4f28b95d7ce16df85843246e1557ce95bb26cc9a21974bbd2eb69e8355".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[128 / 8]);
-			expected = "e5993bf9bd2aa1c45746042e12598155";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
-
-			// COUNT=10
-			hmac.Key = "5be2bf7f5e2527e15fe65cde4507d98ba55457006867de9e4f36645bcff4ca38754f92898b1c5544718102593b8c26d45d1fceaea27d97ede9de8b9ebfe88093".FromBase16();
-			buffer = new ArraySegment<byte>("00000001004b13c1f628cb7a00d9498937bf437b71fe196cc916c47d298fa296c6b86188073543bbc66b7535eb17b5cf43c37944b6ca1225298a9e563413e5bb".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[256 / 8]);
-			expected = "cee0c11be2d8110b808f738523e718447d785878bbb783fb081a055160590072";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
-
-			// COUNT=20
-			hmac.Key = "9dd03864a31aa4156ca7a12000f541680ce0a5f4775eef1088ac13368200b447a78d0bf14416a1d583c54b0f11200ff4a8983dd775ce9c0302d262483e300ae6".FromBase16();
-			buffer = new ArraySegment<byte>("00000001037369f142d669fca9e87e9f37ae8f2c8d506b753fdfe8a3b72f75cac1c50fa1f8620883b8dcb8dcc67adcc95e70aa624adb9fe1b2cb396692b0d2e8".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[160 / 8]);
-			expected = "96e8d1bc01dc95c0bf42c3c38fc54c090373ced4";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
-
-			// COUNT=30
-			hmac.Key = "a9f4a2c5af839867f5db5a1e520ab3cca72a166ca60de512fd7fe7e64cf94f92cf1d8b636175f293e003275e021018c3f0ede495997a505ec9a2afeb0495be57".FromBase16();
-			buffer = new ArraySegment<byte>("000000018e9db3335779db688bcfe096668d9c3bc64e193e3529c430e68d09d56c837dd6c0f94678f121a68ee1feea4735da85a49d34a5290aa39f7b40de435f".FromBase16());
-			outBuffer = new ArraySegment<byte>(new byte[320 / 8]);
-			expected = "6db880daac98b078ee389a2164252ded61322d661e2b49247ea921e544675d8f17af2bf66dd40d81";
-			SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
-			calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
-			Assert.IsTrue(calculated == expected);
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=0
+				hmac.Key = "dd5dbd45593ee2ac139748e7645b450f223d2ff297b73fd71cbcebe71d41653c950b88500de5322d99ef18dfdd30428294c4b3094f4c954334e593bd982ec614".FromBase16();
+				buffer = new ArraySegment<byte>("00000001b50b0c963c6b3034b8cf19cd3f5c4ebe4f4985af0c03e575db62e6fdf1ecfe4f28b95d7ce16df85843246e1557ce95bb26cc9a21974bbd2eb69e8355".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[128 / 8]);
+				expected = "e5993bf9bd2aa1c45746042e12598155";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=10
+				hmac.Key = "5be2bf7f5e2527e15fe65cde4507d98ba55457006867de9e4f36645bcff4ca38754f92898b1c5544718102593b8c26d45d1fceaea27d97ede9de8b9ebfe88093".FromBase16();
+				buffer = new ArraySegment<byte>("00000001004b13c1f628cb7a00d9498937bf437b71fe196cc916c47d298fa296c6b86188073543bbc66b7535eb17b5cf43c37944b6ca1225298a9e563413e5bb".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[256 / 8]);
+				expected = "cee0c11be2d8110b808f738523e718447d785878bbb783fb081a055160590072";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=20
+				hmac.Key = "9dd03864a31aa4156ca7a12000f541680ce0a5f4775eef1088ac13368200b447a78d0bf14416a1d583c54b0f11200ff4a8983dd775ce9c0302d262483e300ae6".FromBase16();
+				buffer = new ArraySegment<byte>("00000001037369f142d669fca9e87e9f37ae8f2c8d506b753fdfe8a3b72f75cac1c50fa1f8620883b8dcb8dcc67adcc95e70aa624adb9fe1b2cb396692b0d2e8".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[160 / 8]);
+				expected = "96e8d1bc01dc95c0bf42c3c38fc54c090373ced4";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
+			for (int i = 0; i < 2; ++i)
+			{
+				// COUNT=30
+				hmac.Key = "a9f4a2c5af839867f5db5a1e520ab3cca72a166ca60de512fd7fe7e64cf94f92cf1d8b636175f293e003275e021018c3f0ede495997a505ec9a2afeb0495be57".FromBase16();
+				buffer = new ArraySegment<byte>("000000018e9db3335779db688bcfe096668d9c3bc64e193e3529c430e68d09d56c837dd6c0f94678f121a68ee1feea4735da85a49d34a5290aa39f7b40de435f".FromBase16());
+				outBuffer = new ArraySegment<byte>(new byte[320 / 8]);
+				expected = "6db880daac98b078ee389a2164252ded61322d661e2b49247ea921e544675d8f17af2bf66dd40d81";
+				SP800_108_Ctr.DeriveKey(hmac, buffer, outBuffer);
+				calculated = outBuffer.ToBase16(Base16Config.HexLowercase);
+				Assert.IsTrue(calculated == expected);
+			}
 		}// SP800_108_SHA512
 
 		[TestMethod]
