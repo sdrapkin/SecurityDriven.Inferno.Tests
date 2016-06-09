@@ -1,7 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +14,27 @@ namespace SecurityDriven.Inferno.Tests
 	using Hash;
 	using Kdf;
 	using Mac;
+
+	[TestClass]
+	public class Sanity_Test
+	{
+
+		[TestMethod]
+		public void _Sanity()
+		{
+			Assembly assembly = typeof(SecurityDriven.Inferno.CryptoRandom).Assembly;
+			FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+			const string expectedVersion = "1.2.1.0";
+
+			Assert.IsTrue(fvi.ProductVersion == expectedVersion);
+			Assert.IsTrue(fvi.FileVersion == expectedVersion);
+
+			PortableExecutableKinds kind;
+			ImageFileMachine machine;
+			assembly.GetModules()[0].GetPEKind(out kind, out machine);
+			Assert.IsTrue(kind == PortableExecutableKinds.ILOnly);
+		}
+	}// class Sanity_Test
 
 	//http://tools.ietf.org/html/rfc4231
 	[TestClass]
