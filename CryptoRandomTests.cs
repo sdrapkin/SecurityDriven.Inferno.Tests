@@ -94,7 +94,7 @@ namespace SecurityDriven.Inferno.Tests
 		}
 
 		[TestMethod]
-		public void CryptoRandom_NullInput()
+		public void CryptoRandom_NullInput1()
 		{
 			var rng = new CryptoRandom();
 			try
@@ -110,11 +110,45 @@ namespace SecurityDriven.Inferno.Tests
 		}
 
 		[TestMethod]
+		public void CryptoRandom_NullInput2()
+		{
+			var rng = new CryptoRandom();
+			try
+			{
+				rng.NextBytes(null, 0, 0); // should throw
+			}
+			catch (ArgumentNullException)
+			{
+				Assert.IsTrue(true);
+				return;
+			}
+			Assert.Fail("Failed to throw ArgumentNullException.");
+		}
+
+		[TestMethod]
 		public void CryptoRandom_ZeroLengthInput()
 		{
 			var rng = new CryptoRandom();
+
 			// While this will do nothing, it's not something that throws.
 			rng.NextBytes(Utils.ZeroLengthArray<byte>.Value);
+			rng.NextBytes(Utils.ZeroLengthArray<byte>.Value, 0, 0);
+
+			bool isThrown = false;
+			try
+			{
+				rng.NextBytes(Utils.ZeroLengthArray<byte>.Value, 0, 123);
+			}
+			catch (ArgumentException) { isThrown = true; }
+			Assert.IsTrue(isThrown);
+
+			isThrown = false;
+			try
+			{
+				rng.NextBytes(Utils.ZeroLengthArray<byte>.Value, 123, 0);
+			}
+			catch (ArgumentException) { isThrown = true; }
+			Assert.IsTrue(isThrown);
 		}
 
 		[TestMethod]
