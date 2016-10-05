@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace SecurityDriven.Inferno.Tests
 {
@@ -37,6 +39,75 @@ namespace SecurityDriven.Inferno.Tests
 			// This isn't a guarantee, just a statistical observation.
 			// Allow a 6% tolerance band before considering it to have gotten out of hand.
 			Assert.IsTrue(bitDifference < 0.06, bitDifference.ToString());
+		}
+
+		[TestMethod]
+		public void CryptoRandom_NextDouble()
+		{
+			Func<decimal, int, decimal> bucketFn = (val, _bucketCount) =>
+			{
+				if (val < 0M) return decimal.MinValue / 4;
+				if (val >= 1M) return decimal.MaxValue / 2;
+
+				decimal step = 1M / _bucketCount, m = step;
+				for (int i = 0; i < _bucketCount - 1; ++i, m += step)
+				{
+					if (val < m) return m;
+				}
+				return m;
+			};
+
+			var rng = new CryptoRandom();
+			Func<decimal> decimalFn = () => (decimal)rng.NextDouble();
+
+			const int bucketCount = 200;
+
+			const int extra_count1 = 0;
+			const int extra_count2 = 0;
+			const int count = 40000 * 1;
+			const int totalCount = count + extra_count1 + extra_count2;
+
+			var q1 = Enumerable.Range(0, count).Select(i => decimalFn())
+				.Concat(Enumerable.Repeat(0.1M, extra_count1))
+				.Concat(Enumerable.Repeat(0.9M, extra_count2)).ToList();
+
+			var q2 = q1.AsParallel().GroupBy(val => bucketFn(val, bucketCount));
+			var q3 = q2.Select(d => new { Key = d.Key, Count = d.LongCount() });
+
+			decimal expectedMaxAverageDelta = (1M / ((decimal)Math.Pow(totalCount, 1d / 2.5)));
+
+			decimal actualAverage = q1.Average();
+			decimal actualAverageDelta = Math.Abs(actualAverage - 0.5M);
+			Assert.IsTrue(actualAverageDelta < expectedMaxAverageDelta, $"Unexpected average delta: {actualAverageDelta} {expectedMaxAverageDelta}");
+
+			decimal keySum = decimal.Round(q3.Sum(i => i.Key), 2);
+			Assert.IsTrue(keySum > 0);
+			Assert.IsTrue(keySum < bucketCount);
+
+			var expectedKeySum = decimal.Round((1M + bucketCount) / 2, 2);
+			Assert.IsTrue(keySum == expectedKeySum, $"Unexpected bucket key sum: {keySum} expected: {expectedKeySum}");
+
+			var avg = q3.Select(i => i.Count).Average();
+			var sumOfSquares = (from i in q3 let delta = (i.Count - avg) select delta * delta).Sum();
+			var stddev = Math.Sqrt(sumOfSquares / q3.Count());
+
+			var q4 = q3.Select(i => Math.Abs(i.Count - avg));
+
+			decimal stddevTest1 = 0M, stddevTest2 = 0M, stddevTest3 = 0M;
+			foreach (var val in q4)
+			{
+				if (val < stddev * 1) ++stddevTest1;
+				if (val < stddev * 2) ++stddevTest2;
+				if (val < stddev * 3) ++stddevTest3;
+			}
+
+			stddevTest1 = decimal.Round(stddevTest1 / bucketCount, 2);
+			stddevTest2 = decimal.Round(stddevTest2 / bucketCount, 2);
+			stddevTest3 = decimal.Round(stddevTest3 / bucketCount, 2);
+
+			Assert.IsTrue(Math.Abs(stddevTest1 - 0.68M) <= 0.04M, $"{nameof(stddevTest1)} failed: {stddevTest1}"); // target: 0.68
+			Assert.IsTrue(Math.Abs(stddevTest2 - 0.95M) <= 0.04M, $"{nameof(stddevTest2)} failed: {stddevTest2}"); // target: 0.95
+			Assert.IsTrue(Math.Abs(stddevTest3 - 0.99M) <= 0.04M, $"{nameof(stddevTest3)} failed: {stddevTest3}"); // target: 0.99
 		}
 
 		[TestMethod]
@@ -86,7 +157,7 @@ namespace SecurityDriven.Inferno.Tests
 			AssertNeutralParity(random);
 		}
 
-		[TestMethod]
+		//[TestMethod]
 		public void CryptoRandom_IdempotentDispose()
 		{
 			// CryptoRandom doesn't need to be disposed
@@ -169,7 +240,7 @@ namespace SecurityDriven.Inferno.Tests
 					taskArrays[iTask] = new byte[RandomSize];
 					byte[] taskLocal = taskArrays[iTask];
 
-					tasks[iTask] = System.Threading.Tasks.Task.Run(
+					tasks[iTask] = Task.Factory.StartNew(
 						() =>
 						{
 							sync.WaitOne();
@@ -178,12 +249,12 @@ namespace SecurityDriven.Inferno.Tests
 							{
 								rng.NextBytes(taskLocal);
 							}
-						});
+						}, TaskCreationOptions.LongRunning);
 				}
 
 				// Ready? Set() Go!
 				sync.Set();
-				System.Threading.Tasks.Task.WaitAll(tasks);
+				Task.WaitAll(tasks);
 			}
 
 			for (int i = 0; i < ParallelTasks; i++)
