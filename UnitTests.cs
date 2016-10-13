@@ -1149,7 +1149,45 @@ namespace SecurityDriven.Inferno.Tests
 				bool valid = Otp.TOTP.ValidateTOTP(secret, correct_sha1_results[i].Item2, () => time, TOTP_LENGTH);
 				Assert.IsTrue(valid);
 			}
+
+			Exception exception = null;
+			try
+			{
+				Otp.TOTP.GenerateTOTP(secret, () => Otp.TOTP._unixEpoch.AddDays(-1));
+			}
+			catch (ArgumentOutOfRangeException ex)
+			{
+				exception = ex;
+			}
+			Assert.IsNotNull(exception, "Exception is not thrown when DateTime is less than Unix epoch.");
 		}//TOTP_Sanity()
+
+		[TestMethod]
+		public void TOTP_GetExpiryTime()
+		{
+			{
+				Func<DateTime> utcFactory = () => DateTime.UtcNow;
+				DateTime utc = utcFactory();
+
+				DateTime expiryTime = Otp.TOTP.GetExpiryTime();
+				int deltaSeconds = (int)expiryTime.Subtract(utc).TotalSeconds;
+				Assert.IsTrue(deltaSeconds >= 0 && deltaSeconds <= 30, $"deltaSeconds outside expected range [{deltaSeconds.ToString()}]");
+			}
+
+			{
+				CryptoRandom rng = new CryptoRandom();
+				Func<DateTime> utcFactory = () => Otp.TOTP._unixEpoch.AddTicks(rng.NextLong(TimeSpan.FromDays(365.25 * 300).Ticks));
+
+				Parallel.For(0, 100000, i =>
+				{
+					var utc2 = utcFactory();
+					DateTime expiryTime = Otp.TOTP.GetExpiryTime(() => utc2);
+					int deltaSeconds = (int)expiryTime.Subtract(utc2).TotalSeconds;
+
+					Assert.IsTrue(deltaSeconds >= 0 && deltaSeconds <= 30, $"deltaSeconds outside expected range [{deltaSeconds.ToString()}]");
+				});
+			}
+		}//TOTP_GetExpiryTime()
 	}//class TOTP_TestClass
 
 }//ns
