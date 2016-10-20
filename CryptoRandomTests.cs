@@ -105,7 +105,7 @@ namespace SecurityDriven.Inferno.Tests
 			stddevTest2 = decimal.Round(stddevTest2 / bucketCount, 2);
 			stddevTest3 = decimal.Round(stddevTest3 / bucketCount, 2);
 
-			Assert.IsTrue(Math.Abs(stddevTest1 - 0.68M) <= 0.04M, $"{nameof(stddevTest1)} failed: {stddevTest1}"); // target: 0.68
+			Assert.IsTrue(Math.Abs(stddevTest1 - 0.68M) <= 0.06M, $"{nameof(stddevTest1)} failed: {stddevTest1}"); // target: 0.68
 			Assert.IsTrue(Math.Abs(stddevTest2 - 0.95M) <= 0.04M, $"{nameof(stddevTest2)} failed: {stddevTest2}"); // target: 0.95
 			Assert.IsTrue(Math.Abs(stddevTest3 - 0.99M) <= 0.04M, $"{nameof(stddevTest3)} failed: {stddevTest3}"); // target: 0.99
 		}
