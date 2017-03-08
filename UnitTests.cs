@@ -29,9 +29,7 @@ namespace SecurityDriven.Inferno.Tests
 			Assert.IsTrue(fvi.ProductVersion == expectedVersion);
 			Assert.IsTrue(fvi.FileVersion == expectedVersion);
 
-			PortableExecutableKinds kind;
-			ImageFileMachine machine;
-			assembly.GetModules()[0].GetPEKind(out kind, out machine);
+			assembly.GetModules()[0].GetPEKind(out var kind, out var machine);
 			Assert.IsTrue(kind == PortableExecutableKinds.ILOnly);
 		}
 	}// class Sanity_Test
