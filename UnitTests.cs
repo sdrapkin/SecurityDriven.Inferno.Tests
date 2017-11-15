@@ -24,7 +24,7 @@ namespace SecurityDriven.Inferno.Tests
 		{
 			Assembly assembly = typeof(SecurityDriven.Inferno.CryptoRandom).Assembly;
 			FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-			const string expectedVersion = "1.4.0.0";
+			const string expectedVersion = "1.4.0.1";
 
 			Assert.IsTrue(fvi.ProductVersion == expectedVersion);
 			Assert.IsTrue(fvi.FileVersion == expectedVersion);
@@ -1188,4 +1188,21 @@ namespace SecurityDriven.Inferno.Tests
 		}//TOTP_GetExpiryTime()
 	}//class TOTP_TestClass
 
+	[TestClass]
+	public class ByteArrayExtensions_TestClass
+	{
+		static readonly CryptoRandom rnd = new CryptoRandom();
+		[TestMethod]
+		public void CloneBytes()
+		{
+			for (int i = 0; i < 20; ++i)
+			{
+				var bytes = rnd.NextBytes(rnd.Next(1, 10000));
+				var cloned = ByteArrayExtensions.CloneBytes(bytes);
+				var areEqual = Utils.ConstantTimeEqual(bytes, cloned);
+				Assert.IsTrue(areEqual);
+				Assert.IsTrue(bytes != cloned);
+			}
+		}//CloneBytes()
+	}// class ByteArrayExtensions_TestClass
 }//ns
