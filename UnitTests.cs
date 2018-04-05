@@ -24,7 +24,7 @@ namespace SecurityDriven.Inferno.Tests
 		{
 			Assembly assembly = typeof(SecurityDriven.Inferno.CryptoRandom).Assembly;
 			FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-			const string expectedVersion = "1.4.0.2";
+			const string expectedVersion = "1.5.0.0";
 
 			Assert.IsTrue(fvi.ProductVersion == expectedVersion);
 			Assert.IsTrue(fvi.FileVersion == expectedVersion);

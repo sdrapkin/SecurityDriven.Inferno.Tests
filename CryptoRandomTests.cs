@@ -202,13 +202,13 @@ namespace SecurityDriven.Inferno.Tests
 			var rng = new CryptoRandom();
 
 			// While this will do nothing, it's not something that throws.
-			rng.NextBytes(Utils.ZeroLengthArray<byte>.Value);
-			rng.NextBytes(Utils.ZeroLengthArray<byte>.Value, 0, 0);
+			rng.NextBytes(Array.Empty<byte>());
+			rng.NextBytes(Array.Empty<byte>(), 0, 0);
 
 			bool isThrown = false;
 			try
 			{
-				rng.NextBytes(Utils.ZeroLengthArray<byte>.Value, 0, 123);
+				rng.NextBytes(Array.Empty<byte>(), 0, 123);
 			}
 			catch (ArgumentException) { isThrown = true; }
 			Assert.IsTrue(isThrown);
@@ -216,7 +216,7 @@ namespace SecurityDriven.Inferno.Tests
 			isThrown = false;
 			try
 			{
-				rng.NextBytes(Utils.ZeroLengthArray<byte>.Value, 123, 0);
+				rng.NextBytes(Array.Empty<byte>(), 123, 0);
 			}
 			catch (ArgumentException) { isThrown = true; }
 			Assert.IsTrue(isThrown);
