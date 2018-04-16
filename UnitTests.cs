@@ -1205,4 +1205,48 @@ namespace SecurityDriven.Inferno.Tests
 			}
 		}//CloneBytes()
 	}// class ByteArrayExtensions_TestClass
+
+	[TestClass]
+	public class CngKeyExtensions_TestClass
+	{
+		static readonly CryptoRandom rnd = new CryptoRandom();
+
+		[TestMethod]
+		public void CngKey_GetSharedDhmSecret()
+		{
+			byte[] contextAppend = rnd.NextBytes(rnd.Next(0, 1001));
+			byte[] contextPrepend = rnd.NextBytes(rnd.Next(0, 1001));
+
+			byte[] ecdh1_prv_blob;
+			byte[] ecdh2_pub_blob;
+
+			{
+				var ecdh1 = CngKeyExtensions.CreateNewDhmKey();
+				var ecdh2 = CngKeyExtensions.CreateNewDhmKey();
+
+				ecdh1_prv_blob = CngKeyExtensions.GetPrivateBlob(ecdh1);
+				ecdh2_pub_blob = CngKeyExtensions.GetPublicBlob(ecdh1);
+			}
+
+			CngKey prv_key = ecdh1_prv_blob.ToPrivateKeyFromBlob();
+			CngKey pub_key = ecdh2_pub_blob.ToPublicKeyFromBlob();
+
+			byte[] result1 = prv_key.GetSharedDhmSecret(pub_key, contextAppend, contextPrepend);
+			byte[] result2 = prv_key.GetSharedDhmSecret(pub_key, contextAppend, contextPrepend);// same call
+
+			byte[] result3 = Alternative_GetSharedDhmSecret(prv_key, pub_key, contextAppend, contextPrepend);
+			byte[] result4 = Alternative_GetSharedDhmSecret(prv_key, pub_key, contextAppend, contextPrepend);// same call;
+
+			Assert.IsTrue(Enumerable.SequenceEqual(result1, result2));
+			Assert.IsTrue(Enumerable.SequenceEqual(result2, result3));
+			Assert.IsTrue(Enumerable.SequenceEqual(result3, result4));
+		}//CngKey_GetSharedDhmSecret()
+
+		static byte[] Alternative_GetSharedDhmSecret(CngKey priv_k1, CngKey pub_k2, byte[] contextAppend = null, byte[] contextPrepend = null)
+		{
+			using (var ecdh = new ECDiffieHellmanCng(priv_k1))
+			using (var pub_ecdh = new ECDiffieHellmanCng(pub_k2))
+				return ecdh.DeriveKeyFromHash(pub_ecdh.PublicKey, hashAlgorithm: HashAlgorithmName.SHA384, secretAppend: contextAppend, secretPrepend: contextPrepend);
+		}//Alternative_GetSharedDhmSecret()
+	}// class CngKeyExtensions_TestClass
 }//ns
