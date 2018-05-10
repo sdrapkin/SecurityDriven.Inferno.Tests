@@ -40,14 +40,16 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NET462</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SecurityDriven.Inferno">
-      <HintPath>..\SecurityDriven.Inferno\bin\Release\SecurityDriven.Inferno.dll</HintPath>
+    <Reference Include="SecurityDriven.Inferno, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SecurityDriven.Inferno\bin\Release\net462\SecurityDriven.Inferno.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

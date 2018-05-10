@@ -24,13 +24,21 @@ namespace SecurityDriven.Inferno.Tests
 		{
 			Assembly assembly = typeof(SecurityDriven.Inferno.CryptoRandom).Assembly;
 			FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-			const string expectedVersion = "1.5.0.0";
+			const string expectedVersion = "1.5.1.0";
 
 			Assert.IsTrue(fvi.ProductVersion == expectedVersion);
 			Assert.IsTrue(fvi.FileVersion == expectedVersion);
 
 			assembly.GetModules()[0].GetPEKind(out var kind, out var machine);
 			Assert.IsTrue(kind == PortableExecutableKinds.ILOnly);
+
+			string environment =
+#if NET462
+				".NET 4.6.2";
+#elif NETCOREAPP2_1
+				"CORE 2.1";
+#endif
+			Console.WriteLine(environment);
 		}
 	}// class Sanity_Test
 

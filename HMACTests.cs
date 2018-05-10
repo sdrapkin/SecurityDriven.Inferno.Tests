@@ -195,7 +195,11 @@ namespace SecurityDriven.Inferno.Tests
 
 		protected override HashAlgorithm CreateHashAlgorithm()
 		{
+#if NET462
 			return new SHA1Cng();
+#elif NETCOREAPP2_1
+			return SHA1.Create();
+#endif
 		}
 
 		protected override int BlockSize { get { return 64; } }
@@ -259,7 +263,11 @@ namespace SecurityDriven.Inferno.Tests
 
 		protected override HashAlgorithm CreateHashAlgorithm()
 		{
+#if NET462
 			return new SHA256Cng();
+#elif NETCOREAPP2_1
+			return SHA256.Create();
+#endif
 		}
 
 		protected override int BlockSize { get { return 64; } }
@@ -324,7 +332,11 @@ namespace SecurityDriven.Inferno.Tests
 
 		protected override HashAlgorithm CreateHashAlgorithm()
 		{
+#if NET462
 			return new SHA384Cng();
+#elif NETCOREAPP2_1
+			return SHA384.Create();
+#endif
 		}
 
 		protected override int BlockSize { get { return 128; } }
@@ -389,7 +401,11 @@ namespace SecurityDriven.Inferno.Tests
 
 		protected override HashAlgorithm CreateHashAlgorithm()
 		{
+#if NET462
 			return new SHA512Cng();
+#elif NETCOREAPP2_1
+			return SHA512.Create();
+#endif
 		}
 
 		protected override int BlockSize { get { return 128; } }
