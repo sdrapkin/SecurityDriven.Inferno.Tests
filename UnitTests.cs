@@ -34,9 +34,9 @@ namespace SecurityDriven.Inferno.Tests
 
 			string environment =
 #if NET462
-				".NET 4.6.2";
+				"[.NET 4.6.2] " + Environment.Version;
 #elif NETCOREAPP2_1
-				"CORE 2.1";
+				"[CORE 2.1] " + Environment.Version;
 #endif
 			Console.WriteLine(environment);
 		}
