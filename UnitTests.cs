@@ -498,6 +498,20 @@ namespace SecurityDriven.Inferno.Tests
 				Assert.IsTrue(b64url + b64[b64.Length - 1] == b64);
 				Assert.IsTrue(Enumerable.SequenceEqual(byteSegment, b64url.FromB64Url()));
 			});
+
+			{
+				string result = null;
+
+				result = new byte[0].ToB64();
+				Assert.IsTrue(result == string.Empty);
+				result = new byte[0].ToB64Url();
+				Assert.IsTrue(result == string.Empty);
+
+				result = new ArraySegment<byte>(new byte[0]).ToB64();
+				Assert.IsTrue(result == string.Empty);
+				result = new ArraySegment<byte>(new byte[0]).ToB64Url();
+				Assert.IsTrue(result == string.Empty);
+			}
 		}// Base64_ToB64Url_Test()
 	}// class Base64_ToB64Url_Tests()
 
@@ -1257,4 +1271,37 @@ namespace SecurityDriven.Inferno.Tests
 				return ecdh.DeriveKeyFromHash(pub_ecdh.PublicKey, hashAlgorithm: HashAlgorithmName.SHA384, secretAppend: contextAppend, secretPrepend: contextPrepend);
 		}//Alternative_GetSharedDhmSecret()
 	}// class CngKeyExtensions_TestClass
+
+	[TestClass]
+	public class SuiteB_Tests
+	{
+		static Random _rnd = new Random(Guid.NewGuid().GetHashCode());
+		[TestMethod]
+		public void SuiteB_Sanity()
+		{
+			var masterKey = new byte[] { 1, 2, 3 };
+
+			var data = new byte[500];
+			for (int i = 0; i < 100; ++i)
+			{
+				_rnd.NextBytes(data);
+
+				const int pOFFSET = 5;
+				const int pCOUNT = 101;
+
+				const int sOFFSET = 67;
+				const int sCOUNT = sOFFSET + 17;
+
+				var plaintextSegment = new ArraySegment<byte>(data, pOFFSET, pCOUNT);
+				var saltSegment = new ArraySegment<byte>(data, sOFFSET, sCOUNT);
+
+				var ciphertextBytes = SuiteB.Encrypt(masterKey, plaintextSegment, saltSegment);
+
+				var ciphertextBytes_Large = Utils.Combine(new byte[17], ciphertextBytes, new byte[17]);
+				var decryptedBytes = SuiteB.Decrypt(masterKey, new ArraySegment<byte>(ciphertextBytes_Large, 17, ciphertextBytes.Length), saltSegment);
+
+				Assert.IsTrue(Enumerable.SequenceEqual(decryptedBytes, plaintextSegment), $"{nameof(i)}={i}");
+			}//for
+		}// SuiteB_Sanity()
+	}// class SuiteB_Tests
 }//ns
