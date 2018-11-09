@@ -16,7 +16,7 @@ namespace SecurityDriven.Inferno.Tests
 	using Mac;
 
 	[TestClass]
-	public class Sanity_Test
+	public class _Sanity_Test
 	{
 
 		[TestMethod]
@@ -24,7 +24,7 @@ namespace SecurityDriven.Inferno.Tests
 		{
 			Assembly assembly = typeof(SecurityDriven.Inferno.CryptoRandom).Assembly;
 			FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-			const string expectedVersion = "1.5.1.0";
+			const string expectedVersion = "1.5.2.0";
 
 			Assert.IsTrue(fvi.ProductVersion == expectedVersion);
 			Assert.IsTrue(fvi.FileVersion == expectedVersion);
@@ -36,7 +36,8 @@ namespace SecurityDriven.Inferno.Tests
 #if NET462
 				"[.NET 4.6.2] " + Environment.Version;
 #elif NETCOREAPP2_1
-				"[CORE 2.1] " + Environment.Version;
+				"[CORE 2.1] " + Environment.Version + "\nFrom: " + System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
+
 #endif
 			Console.WriteLine(environment);
 		}
@@ -1000,18 +1001,33 @@ namespace SecurityDriven.Inferno.Tests
 		byte[] key;
 		ArraySegment<byte> counterBlockSegment;
 		ArraySegment<byte> plaintext;
-		string expectedHex, computedHex;
+		string expectedHex;
 		Func<Aes> aesFactory = Cipher.AesFactories.Aes;
 
 		void RunTest()
 		{
 			using (var ctrTransform = new Cipher.AesCtrCryptoTransform(key, counterBlockSegment, aesFactory))
 			{
-				computedHex = ctrTransform.TransformFinalBlock(plaintext.Array, plaintext.Offset, plaintext.Count).ToBase16();
+				var computedHex = ctrTransform.TransformFinalBlock(plaintext.Array, plaintext.Offset, plaintext.Count).ToBase16();
 				Assert.IsTrue(computedHex == expectedHex);
 			}
 
-		}
+			var computedHex2 = "";
+			using (var ctrTransform = new Cipher.AesCtrCryptoTransform(key, counterBlockSegment, aesFactory))
+			{
+				var outputBuffer = new byte[1];
+				var sb = new StringBuilder(expectedHex.Length);
+
+				for (int i = 0; i < plaintext.Count; ++i)
+				{
+					ctrTransform.TransformBlock(plaintext.Array, plaintext.Offset + i, 1, outputBuffer, 0);
+					sb.Append(outputBuffer.ToBase16());
+				}
+				computedHex2 = sb.ToString();
+			}
+
+			Assert.IsTrue(computedHex2 == expectedHex);
+		}// RunTest()
 
 		[TestMethod]
 		public void AesCtrCryptoTransform_Tests()
