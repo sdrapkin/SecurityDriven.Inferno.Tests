@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Security.Cryptography;
@@ -195,9 +195,9 @@ namespace SecurityDriven.Inferno.Tests
 
 		protected override HashAlgorithm CreateHashAlgorithm()
 		{
-#if NET462
+#if NETFRAMEWORK
 			return new SHA1Cng();
-#elif NETCOREAPP2_1
+#else
 			return SHA1.Create();
 #endif
 		}
@@ -263,9 +263,9 @@ namespace SecurityDriven.Inferno.Tests
 
 		protected override HashAlgorithm CreateHashAlgorithm()
 		{
-#if NET462
+#if NETFRAMEWORK
 			return new SHA256Cng();
-#elif NETCOREAPP2_1
+#else
 			return SHA256.Create();
 #endif
 		}
@@ -332,9 +332,9 @@ namespace SecurityDriven.Inferno.Tests
 
 		protected override HashAlgorithm CreateHashAlgorithm()
 		{
-#if NET462
+#if NETFRAMEWORK
 			return new SHA384Cng();
-#elif NETCOREAPP2_1
+#else
 			return SHA384.Create();
 #endif
 		}
@@ -401,9 +401,9 @@ namespace SecurityDriven.Inferno.Tests
 
 		protected override HashAlgorithm CreateHashAlgorithm()
 		{
-#if NET462
+#if NETFRAMEWORK
 			return new SHA512Cng();
-#elif NETCOREAPP2_1
+#else
 			return SHA512.Create();
 #endif
 		}
