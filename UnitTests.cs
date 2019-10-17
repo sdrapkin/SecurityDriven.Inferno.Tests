@@ -33,9 +33,9 @@ namespace SecurityDriven.Inferno.Tests
 			Assert.IsTrue(kind == PortableExecutableKinds.ILOnly);
 
 			string environment =
-#if NET462
+#if NETFRAMEWORK
 				"[.NET 4.6.2] " + Environment.Version;
-#elif NETCOREAPP2_1
+#else
 				"[CORE 2.1] " + Environment.Version + "\nFrom: " + System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
 
 #endif

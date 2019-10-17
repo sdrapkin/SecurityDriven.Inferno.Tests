@@ -229,5 +229,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-/SecurityDriven.Inferno.Tests.sln
 .vs/
