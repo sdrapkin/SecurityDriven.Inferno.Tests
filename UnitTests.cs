@@ -38,6 +38,8 @@ namespace SecurityDriven.Inferno.Tests
 #elif NETCOREAPP2_1
 				"[CORE 2.1] " + Environment.Version + "\nFrom: " + System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
 
+#elif NETSTANDARD
+				"[NETSTANDARD] " + Environment.Version + "\nFrom: " + System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
 #endif
 			Console.WriteLine(environment);
 		}
@@ -1252,6 +1254,9 @@ namespace SecurityDriven.Inferno.Tests
 		[TestMethod]
 		public void CngKey_GetSharedDhmSecret()
 		{
+#if NETSTANDARD
+			return; // NETSTANDARD 2.0 does not support ECDiffieHellman
+#endif
 			byte[] contextAppend = rnd.NextBytes(rnd.Next(0, 1001));
 			byte[] contextPrepend = rnd.NextBytes(rnd.Next(0, 1001));
 

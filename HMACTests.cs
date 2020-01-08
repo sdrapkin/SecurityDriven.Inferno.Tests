@@ -197,7 +197,7 @@ namespace SecurityDriven.Inferno.Tests
 		{
 #if NET462
 			return new SHA1Cng();
-#elif NETCOREAPP2_1
+#else
 			return SHA1.Create();
 #endif
 		}
@@ -265,7 +265,7 @@ namespace SecurityDriven.Inferno.Tests
 		{
 #if NET462
 			return new SHA256Cng();
-#elif NETCOREAPP2_1
+#else
 			return SHA256.Create();
 #endif
 		}
@@ -334,7 +334,7 @@ namespace SecurityDriven.Inferno.Tests
 		{
 #if NET462
 			return new SHA384Cng();
-#elif NETCOREAPP2_1
+#else
 			return SHA384.Create();
 #endif
 		}
@@ -403,7 +403,7 @@ namespace SecurityDriven.Inferno.Tests
 		{
 #if NET462
 			return new SHA512Cng();
-#elif NETCOREAPP2_1
+#else
 			return SHA512.Create();
 #endif
 		}

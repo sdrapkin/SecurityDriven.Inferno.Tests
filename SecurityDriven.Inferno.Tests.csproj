@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp2.1;net462;</TargetFrameworks>
+		<TargetFrameworks>netcoreapp2.1;net462;netcoreapp3.1</TargetFrameworks>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
@@ -11,6 +11,10 @@
 
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1'">
 		<DefineConstants>NETCOREAPP2_1</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
+		<DefineConstants>NETSTANDARD</DefineConstants>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.1|AnyCPU'">
@@ -32,6 +36,10 @@
 
 		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net462' ">
 			<HintPath>..\SecurityDriven.Inferno\bin\Release\net462\SecurityDriven.Inferno.dll</HintPath>
+		</Reference>
+
+		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'netcoreapp3.1' ">
+			<HintPath>..\SecurityDriven.Inferno\bin\Release\netstandard2.0\SecurityDriven.Inferno.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
