@@ -24,7 +24,7 @@ namespace SecurityDriven.Inferno.Tests
 		{
 			Assembly assembly = typeof(SecurityDriven.Inferno.CryptoRandom).Assembly;
 			FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-			const string expectedVersion = "1.6.0.1";
+			const string expectedVersion = "1.6.2.0";
 
 			Assert.IsTrue(fvi.ProductVersion == expectedVersion);
 			Assert.IsTrue(fvi.FileVersion == expectedVersion);
@@ -1252,37 +1252,75 @@ namespace SecurityDriven.Inferno.Tests
 		static readonly CryptoRandom rnd = new CryptoRandom();
 
 		[TestMethod]
+		public void CngKey_GetSharedDhmSecret_Sanity()
+		{
+			var keyA = CngKeyExtensions.CreateNewDhmKey();
+			var keyB = CngKeyExtensions.CreateNewDhmKey();
+
+			try
+			{
+				byte[] staticSharedSecret = CngKeyExtensions.GetSharedDhmSecret(keyA, publicDhmKey: keyB);
+				Assert.IsTrue(staticSharedSecret.Length == 48);
+			}
+			catch (Exception ex)
+			{
+#if NETSTANDARD
+				Assert.IsTrue(ex is PlatformNotSupportedException); // NETSTANDARD 2.0 does not support ECDiffieHellman
+#else
+				throw;
+#endif
+			}
+		}
+
+		[TestMethod]
 		public void CngKey_GetSharedDhmSecret()
 		{
-#if NETSTANDARD
-			return; // NETSTANDARD 2.0 does not support ECDiffieHellman
-#endif
-			byte[] contextAppend = rnd.NextBytes(rnd.Next(0, 1001));
-			byte[] contextPrepend = rnd.NextBytes(rnd.Next(0, 1001));
-
-			byte[] ecdh1_prv_blob;
-			byte[] ecdh2_pub_blob;
-
+			try
 			{
-				var ecdh1 = CngKeyExtensions.CreateNewDhmKey();
-				var ecdh2 = CngKeyExtensions.CreateNewDhmKey();
+				byte[] contextAppend = rnd.NextBytes(rnd.Next(0, 1001));
+				byte[] contextPrepend = rnd.NextBytes(rnd.Next(0, 1001));
 
-				ecdh1_prv_blob = CngKeyExtensions.GetPrivateBlob(ecdh1);
-				ecdh2_pub_blob = CngKeyExtensions.GetPublicBlob(ecdh1);
+				byte[] ecdh1_prv_blob, ecdh1_pub_blob;
+				byte[] ecdh2_prv_blob, ecdh2_pub_blob;
+
+				{
+					var ecdh1 = CngKeyExtensions.CreateNewDhmKey();
+					var ecdh2 = CngKeyExtensions.CreateNewDhmKey();
+
+					ecdh1_prv_blob = CngKeyExtensions.GetPrivateBlob(ecdh1);
+					ecdh1_pub_blob = CngKeyExtensions.GetPublicBlob(ecdh1);
+					ecdh2_prv_blob = CngKeyExtensions.GetPrivateBlob(ecdh2);
+					ecdh2_pub_blob = CngKeyExtensions.GetPublicBlob(ecdh2);
+				}
+
+				CngKey prv_key1 = ecdh1_prv_blob.ToPrivateKeyFromBlob();
+				CngKey pub_key1 = ecdh1_pub_blob.ToPublicKeyFromBlob();
+				CngKey prv_key2 = ecdh2_prv_blob.ToPrivateKeyFromBlob();
+				CngKey pub_key2 = ecdh2_pub_blob.ToPublicKeyFromBlob();
+
+				byte[] result1 = prv_key1.GetSharedDhmSecret(pub_key2, contextAppend, contextPrepend);
+				byte[] result2 = prv_key1.GetSharedDhmSecret(pub_key2, contextAppend, contextPrepend);// same call
+
+				byte[] result3 = Alternative_GetSharedDhmSecret(prv_key1, pub_key2, contextAppend, contextPrepend);
+				byte[] result4 = Alternative_GetSharedDhmSecret(prv_key1, pub_key2, contextAppend, contextPrepend);// same call
+
+				byte[] result5 = prv_key2.GetSharedDhmSecret(pub_key1, contextAppend, contextPrepend);
+				byte[] result6 = prv_key2.GetSharedDhmSecret(pub_key1, contextAppend, contextPrepend);// same call
+
+				Assert.IsTrue(Enumerable.SequenceEqual(result1, result2));
+				Assert.IsTrue(Enumerable.SequenceEqual(result2, result3));
+				Assert.IsTrue(Enumerable.SequenceEqual(result3, result4));
+				Assert.IsTrue(Enumerable.SequenceEqual(result4, result5));
+				Assert.IsTrue(Enumerable.SequenceEqual(result5, result6));
 			}
-
-			CngKey prv_key = ecdh1_prv_blob.ToPrivateKeyFromBlob();
-			CngKey pub_key = ecdh2_pub_blob.ToPublicKeyFromBlob();
-
-			byte[] result1 = prv_key.GetSharedDhmSecret(pub_key, contextAppend, contextPrepend);
-			byte[] result2 = prv_key.GetSharedDhmSecret(pub_key, contextAppend, contextPrepend);// same call
-
-			byte[] result3 = Alternative_GetSharedDhmSecret(prv_key, pub_key, contextAppend, contextPrepend);
-			byte[] result4 = Alternative_GetSharedDhmSecret(prv_key, pub_key, contextAppend, contextPrepend);// same call;
-
-			Assert.IsTrue(Enumerable.SequenceEqual(result1, result2));
-			Assert.IsTrue(Enumerable.SequenceEqual(result2, result3));
-			Assert.IsTrue(Enumerable.SequenceEqual(result3, result4));
+			catch (Exception ex)
+			{
+#if NETSTANDARD
+				Assert.IsTrue(ex is PlatformNotSupportedException); // NETSTANDARD 2.0 does not support ECDiffieHellman
+#else
+				throw;
+#endif
+			}
 		}//CngKey_GetSharedDhmSecret()
 
 		static byte[] Alternative_GetSharedDhmSecret(CngKey priv_k1, CngKey pub_k2, byte[] contextAppend = null, byte[] contextPrepend = null)
