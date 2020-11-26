@@ -41,6 +41,7 @@ namespace SecurityDriven.Inferno.Tests
 #elif NETSTANDARD
 				"[NETSTANDARD] " + Environment.Version + "\nFrom: " + System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
 #endif
+			Console.WriteLine($"Inferno version: {expectedVersion}");
 			Console.WriteLine(environment);
 		}
 	}// class Sanity_Test
