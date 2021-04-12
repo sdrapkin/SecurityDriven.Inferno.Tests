@@ -155,6 +155,12 @@ namespace SecurityDriven.Inferno.Tests
 			rng.NextBytes(random);
 
 			AssertNeutralParity(random);
+
+#if (NETCOREAPP2_1 || NETSTANDARD2_1)
+			random.AsSpan().Clear();
+			rng.NextBytes(random.AsSpan());
+			AssertNeutralParity(random);
+#endif
 		}
 
 		//[TestMethod]
@@ -272,9 +278,11 @@ namespace SecurityDriven.Inferno.Tests
 			byte[] first = new byte[arraySize];
 			byte[] second = new byte[arraySize];
 
-			var rng = new CryptoRandom();
-			rng.NextBytes(first);
-			rng.NextBytes(second);
+			var rng1 = new CryptoRandom();
+			var rng2 = new CryptoRandom();
+
+			rng1.NextBytes(first);
+			rng1.NextBytes(second);
 
 			// Random being random, there is a chance that it could produce the same sequence.
 			// The smallest test case that we have is 10 bytes.
@@ -283,7 +291,18 @@ namespace SecurityDriven.Inferno.Tests
 			// = 1/256 * 1/256 * ... * 1/256
 			// = 1/(256^10)
 			// = 1/1,208,925,819,614,629,174,706,176
-			Assert.AreNotEqual(first, second);
+
+			Assert.IsTrue(!Enumerable.SequenceEqual(first, second));
+
+#if (NETCOREAPP2_1 || NETSTANDARD2_1)
+			first.AsSpan().Clear();
+			second.AsSpan().Clear();
+			rng1 = new CryptoRandom();
+			rng2 = new CryptoRandom();
+			rng1.NextBytes(first.AsSpan());
+			rng2.NextBytes(second.AsSpan());
+			Assert.IsTrue(!Enumerable.SequenceEqual(first, second));
+#endif
 		}
 
 		static void DifferentParallel(int arraySize)
@@ -305,7 +324,17 @@ namespace SecurityDriven.Inferno.Tests
 			// = 1/256 * 1/256 * ... * 1/256
 			// = 1/(256^10)
 			// = 1/1,208,925,819,614,629,174,706,176
-			Assert.AreNotEqual(first, second);
+			Assert.IsTrue(!Enumerable.SequenceEqual(first, second));
+
+#if (NETCOREAPP2_1 || NETSTANDARD2_1)
+			first.AsSpan().Clear();
+			second.AsSpan().Clear();
+			rng1 = new CryptoRandom();
+			rng2 = new CryptoRandom();
+			rng1.NextBytes(first.AsSpan());
+			rng2.NextBytes(second.AsSpan());
+			Assert.IsTrue(!Enumerable.SequenceEqual(first, second));
+#endif
 		}
 	}//class CryptoRandomTests
 }//ns
