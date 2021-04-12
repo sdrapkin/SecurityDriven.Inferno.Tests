@@ -15,10 +15,21 @@ namespace SecurityDriven.Inferno.Tests
 	using Kdf;
 	using Mac;
 
+	public static class Shared
+	{
+		public static RandomNumberGenerator Rng { get; } = RandomNumberGenerator.Create();
+
+		public static byte[] GetRandomByteArray(int length)
+		{
+			byte[] bytes = new byte[length];
+			Rng.GetBytes(bytes);
+			return bytes;
+		}//GetRandomByteArray()
+	}// class Shared
+
 	[TestClass]
 	public class _Sanity_Test
 	{
-
 		[TestMethod]
 		public void _Sanity()
 		{
@@ -360,7 +371,15 @@ namespace SecurityDriven.Inferno.Tests
 			result = Base32Extensions.ToBase32(new ArraySegment<byte>(bytes), testConfig);
 			Assert.AreEqual<string>(result, expected);
 			Assert.IsTrue(Enumerable.SequenceEqual(bytes, Base32Extensions.FromBase32(expected, testConfig)));
-		}
+
+			for (var i = 0; i < 100; ++i)
+			{
+				byte[] byteArray = Shared.GetRandomByteArray(i * 5);
+				string encoded = Base32Extensions.ToBase32(byteArray);
+				byte[] decoded = Base32Extensions.FromBase32(encoded);
+				Assert.IsTrue(Enumerable.SequenceEqual(byteArray, decoded));
+			}
+		}//Base32_Tests()
 
 		[TestMethod]
 		public void Base16_BasicTests()
@@ -1268,6 +1287,7 @@ namespace SecurityDriven.Inferno.Tests
 #if NETSTANDARD
 				Assert.IsTrue(ex is PlatformNotSupportedException); // NETSTANDARD 2.0 does not support ECDiffieHellman
 #else
+				ex.GetHashCode();// to avoid 'unused ex' warning
 				throw;
 #endif
 			}
@@ -1319,6 +1339,7 @@ namespace SecurityDriven.Inferno.Tests
 #if NETSTANDARD
 				Assert.IsTrue(ex is PlatformNotSupportedException); // NETSTANDARD 2.0 does not support ECDiffieHellman
 #else
+				ex.GetHashCode();// to avoid 'unused ex' warning
 				throw;
 #endif
 			}
