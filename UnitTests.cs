@@ -35,7 +35,7 @@ namespace SecurityDriven.Inferno.Tests
 		{
 			Assembly assembly = typeof(SecurityDriven.Inferno.CryptoRandom).Assembly;
 			FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-			const string expectedVersion = "1.6.4.0";
+			const string expectedVersion = "1.6.5.0";
 
 			Assert.IsTrue(fvi.ProductVersion == expectedVersion);
 			Assert.IsTrue(fvi.FileVersion == expectedVersion);
@@ -46,11 +46,13 @@ namespace SecurityDriven.Inferno.Tests
 			string environment =
 #if NET462
 				"[.NET 4.6.2] " + Environment.Version;
-#elif NETCOREAPP2_1
-				"[CORE 2.1] " + Environment.Version + "\nFrom: " + System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
+#elif NETCOREAPP3_1
+				"[CORE 3.1] " + Environment.Version + "\nFrom: " + System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
 
 #elif NETSTANDARD
 				"[NETSTANDARD] " + Environment.Version + "\nFrom: " + System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
+#else
+				"[.NET] " + Environment.Version + "\nFrom: " + System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
 #endif
 			Console.WriteLine($"Inferno version: {expectedVersion}");
 			Console.WriteLine(environment);

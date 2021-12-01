@@ -156,7 +156,7 @@ namespace SecurityDriven.Inferno.Tests
 
 			AssertNeutralParity(random);
 
-#if (NETCOREAPP2_1 || NETSTANDARD2_1)
+#if (NETCOREAPP3_1 || NETSTANDARD2_1)
 			random.AsSpan().Clear();
 			rng.NextBytes(random.AsSpan());
 			AssertNeutralParity(random);
@@ -294,7 +294,7 @@ namespace SecurityDriven.Inferno.Tests
 
 			Assert.IsTrue(!Enumerable.SequenceEqual(first, second));
 
-#if (NETCOREAPP2_1 || NETSTANDARD2_1)
+#if (NETCOREAPP3_1 || NETSTANDARD2_1)
 			first.AsSpan().Clear();
 			second.AsSpan().Clear();
 			rng1 = new CryptoRandom();
@@ -326,7 +326,7 @@ namespace SecurityDriven.Inferno.Tests
 			// = 1/1,208,925,819,614,629,174,706,176
 			Assert.IsTrue(!Enumerable.SequenceEqual(first, second));
 
-#if (NETCOREAPP2_1 || NETSTANDARD2_1)
+#if (NETCOREAPP3_1 || NETSTANDARD2_1)
 			first.AsSpan().Clear();
 			second.AsSpan().Clear();
 			rng1 = new CryptoRandom();
