@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net462;netcoreapp3.1;net5;net6</TargetFrameworks>
+		<TargetFrameworks>net462;netcoreapp3.1;net5;net6;net7</TargetFrameworks>
 		<IsPackable>false</IsPackable>
 		<SignAssembly>true</SignAssembly>
 		<DelaySign>false</DelaySign>
@@ -31,19 +31,23 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'netcoreapp3.1' ">
+		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
 			<HintPath>..\SecurityDriven.Inferno\bin\Release\netcoreapp3.1\SecurityDriven.Inferno.dll</HintPath>
 		</Reference>
 
-		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net462' ">
+		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net462'">
 			<HintPath>..\SecurityDriven.Inferno\bin\Release\net462\SecurityDriven.Inferno.dll</HintPath>
 		</Reference>
 
-		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net5' ">
+		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net5'">
 			<HintPath>..\SecurityDriven.Inferno\bin\Release\netstandard2.0\SecurityDriven.Inferno.dll</HintPath>
 		</Reference>
 
-		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net6' ">
+		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net6'">
+			<HintPath>..\SecurityDriven.Inferno\bin\Release\netcoreapp3.1\SecurityDriven.Inferno.dll</HintPath>
+		</Reference>
+
+		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net7'">
 			<HintPath>..\SecurityDriven.Inferno\bin\Release\netcoreapp3.1\SecurityDriven.Inferno.dll</HintPath>
 		</Reference>
 	</ItemGroup>
