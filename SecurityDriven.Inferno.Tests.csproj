@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net462;netcoreapp3.1;net5;net6;net7;net8</TargetFrameworks>
+		<TargetFrameworks>net462;netcoreapp3.1;net5.0;net6.0;net8.0</TargetFrameworks>
 		<IsPackable>false</IsPackable>
 		<SignAssembly>true</SignAssembly>
 		<DelaySign>false</DelaySign>
@@ -22,16 +22,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
-		<PackageReference Include="Microsoft.TestPlatform" Version="17.6.3" />
-		<PackageReference Include="MSTest.TestAdapter" Version="3.0.4" />
-		<PackageReference Include="MSTest.TestFramework" Version="3.0.4" />
-		<PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
-		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
-		<PackageReference Include="System.Security.Cryptography.Cng" Version="5.0.0" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
 			<HintPath>..\SecurityDriven.Inferno\bin\Release\netcoreapp3.1\SecurityDriven.Inferno.dll</HintPath>
 		</Reference>
@@ -40,20 +30,16 @@
 			<HintPath>..\SecurityDriven.Inferno\bin\Release\net462\SecurityDriven.Inferno.dll</HintPath>
 		</Reference>
 
-		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net5'">
+		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net5.0'">
 			<HintPath>..\SecurityDriven.Inferno\bin\Release\netstandard2.0\SecurityDriven.Inferno.dll</HintPath>
 		</Reference>
 
-		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net6'">
+		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net6.0'">
 			<HintPath>..\SecurityDriven.Inferno\bin\Release\netcoreapp3.1\SecurityDriven.Inferno.dll</HintPath>
 		</Reference>
 
-		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net7'">
-			<HintPath>..\SecurityDriven.Inferno\bin\Release\netcoreapp3.1\SecurityDriven.Inferno.dll</HintPath>
-		</Reference>
-
-		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net8'">
-			<HintPath>..\SecurityDriven.Inferno\bin\Release\netcoreapp3.1\SecurityDriven.Inferno.dll</HintPath>
+		<Reference Include="SecurityDriven.Inferno" Condition="'$(TargetFramework)' == 'net8.0'">
+			<HintPath>..\SecurityDriven.Inferno\bin\Release\net8.0\SecurityDriven.Inferno.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
@@ -72,4 +58,23 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
+		<PackageReference Include="Microsoft.TestPlatform" Version="17.6.3" />
+		<PackageReference Include="MSTest.TestAdapter" Version="3.0.4" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.0.4" />
+		<PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
+		<PackageReference Include="System.Security.Cryptography.Cng" Version="5.0.0" />
+		<PackageReference Include="System.Formats.Asn1" Version="9.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework) == 'netstandard2.0' OR $(TargetFramework) == 'net462'">
+		<PackageReference Include="System.Numerics.Vectors" Version="4.6.0" />
+		<PackageReference Include="System.ValueTuple" Version="4.5.0" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="$(TargetFramework) == 'netstandard2.0' OR $(TargetFramework) == 'netcoreapp3.1'">
+		<PackageReference Include="System.Security.Cryptography.Cng" Version="5.0.0" />
+	</ItemGroup>
 </Project>

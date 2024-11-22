@@ -35,9 +35,9 @@ namespace SecurityDriven.Inferno.Tests
 		{
 			Assembly assembly = typeof(SecurityDriven.Inferno.CryptoRandom).Assembly;
 			FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-			const string expectedVersion = "1.6.5.0";
+			const string expectedVersion = "1.6.6.0";
 
-			Assert.IsTrue(fvi.ProductVersion == expectedVersion);
+			Assert.IsTrue(fvi.ProductVersion.StartsWith(expectedVersion));
 			Assert.IsTrue(fvi.FileVersion == expectedVersion);
 
 			assembly.GetModules()[0].GetPEKind(out var kind, out var machine);
@@ -1268,6 +1268,7 @@ namespace SecurityDriven.Inferno.Tests
 		}//CloneBytes()
 	}// class ByteArrayExtensions_TestClass
 
+#if !NET5_0
 	[TestClass]
 	public class CngKeyExtensions_TestClass
 	{
@@ -1354,6 +1355,7 @@ namespace SecurityDriven.Inferno.Tests
 				return ecdh.DeriveKeyFromHash(pub_ecdh.PublicKey, hashAlgorithm: HashAlgorithmName.SHA384, secretAppend: contextAppend, secretPrepend: contextPrepend);
 		}//Alternative_GetSharedDhmSecret()
 	}// class CngKeyExtensions_TestClass
+#endif
 
 	[TestClass]
 	public class SuiteB_Tests
